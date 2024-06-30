@@ -23,8 +23,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   String _address = '';
   String _phoneNumber = '';
 
-  Future<void> _editDialog(BuildContext context, String title, String field,
-      TextEditingController controller, Function onSave) async {
+  Future<void> _editDialog(BuildContext context, String title, TextEditingController controller, Function onSave) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -80,140 +79,163 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             return Center(child: CircularProgressIndicator());
           }
           final userDoc = snapshot.data!;
-          _fullName = _fullName.isEmpty
-              ? userDoc['fullName']
-              : _fullName;
-          _email = _email.isEmpty
-              ? userDoc['email']
-              : _email;
-          _address = _address.isEmpty
-              ? userDoc['address']
-              : _address;
-          _phoneNumber = _phoneNumber.isEmpty
-              ? userDoc['phoneNumber']
-              : _phoneNumber;
+          _fullName = _fullName.isEmpty ? userDoc['fullName'] : _fullName;
+          _email = _email.isEmpty ? userDoc['email'] : _email;
+          _address = _address.isEmpty ? userDoc['address'] : _address;
+          _phoneNumber = _phoneNumber.isEmpty ? userDoc['phoneNumber'] : _phoneNumber;
 
           _fullNameController.text = _fullName;
           _emailController.text = _email;
           _addressController.text = _address;
           _phoneNumberController.text = _phoneNumber;
 
-          return Column(
-            children: [
-              ListTile(
-                title: Text('Full Name: $_fullName'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editDialog(context, 'Full Name', 'fullName', _fullNameController, () {
-                      setState(() {
-                        _fullName = _fullNameController.text;
-                      });
-                    });
-                  },
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Buyer Information',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Full Name: $_fullName'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editDialog(context, 'Full Name', _fullNameController, () {
+                              setState(() {
+                                _fullName = _fullNameController.text;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Email: $_email'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editDialog(context, 'Email', _emailController, () {
+                              setState(() {
+                                _email = _emailController.text;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Address: $_address'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editDialog(context, 'Address', _addressController, () {
+                              setState(() {
+                                _address = _addressController.text;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Phone Number: $_phoneNumber'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editDialog(context, 'Phone Number', _phoneNumberController, () {
+                              setState(() {
+                                _phoneNumber = _phoneNumberController.text;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                title: Text('Email: $_email'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editDialog(context, 'Email', 'email', _emailController, () {
-                      setState(() {
-                        _email = _emailController.text;
-                      });
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: Text('Address: $_address'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editDialog(context, 'Address', 'address', _addressController, () {
-                      setState(() {
-                        _address = _addressController.text;
-                      });
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: Text('Phone Number: $_phoneNumber'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editDialog(context, 'Phone Number', 'phoneNumber', _phoneNumberController, () {
-                      setState(() {
-                        _phoneNumber = _phoneNumberController.text;
-                      });
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cartData.length,
-                  itemBuilder: (context, index) {
-                    final cartItem = cartData.values.toList()[index];
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Order Information',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: cartData.length,
+                        itemBuilder: (context, index) {
+                          final cartItem = cartData.values.toList()[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        child: SizedBox(
-                          height: 200,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 100,
-                                width: 100,
-                                child: Image.network(
-                                  cartItem.imageUrl[0],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: SizedBox(
+                                height: 200,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      cartItem.productName,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                    SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: Image.network(
+                                        cartItem.imageUrl[0],
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Text(
-                                      'Size ' + cartItem.productSize,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartItem.productName,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Size ' + cartItem.productSize,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            cartItem.price.toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.pink),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Text(
-                                      cartItem.price.toStringAsFixed(2),
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.pink),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

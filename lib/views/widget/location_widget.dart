@@ -14,7 +14,7 @@ class LocationWidget extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            'assets/icons/store-1.png',
+            'assets/icons/logo.png',
             width: 30,
           ),
           SizedBox(

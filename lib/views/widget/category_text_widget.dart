@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uber_shop_app/views/screens/category_screen.dart';
 
+import '../screens/inner_screens/category_products.dart';
+
 class CategoryTextWidget extends StatefulWidget {
   const CategoryTextWidget({super.key});
 
@@ -53,18 +55,17 @@ class _CategoryTextWidgetState extends State<CategoryTextWidget> {
                           return Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: ActionChip(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CategoryProductScreen(
+                                      categoryData: categoryData,
+                                    ),
+                                  ),
+                                );
+                              },
                               backgroundColor: Colors.pink.shade900,
-                              // label: Center(
-                              //   child: Text(
-                              //     categoryData['categoryName'].toUpperCase(),
-                              //     style: TextStyle(
-                              //       color: Colors.white,
-                              //       fontSize: 12,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
