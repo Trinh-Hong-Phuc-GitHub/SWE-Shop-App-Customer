@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:uber_shop_app/views/widget/banner_widget.dart';
-import 'package:uber_shop_app/views/widget/category_item_widget.dart';
 import 'package:uber_shop_app/views/widget/category_text_widget.dart';
 import 'package:uber_shop_app/views/widget/home_products_widget.dart';
 import 'package:uber_shop_app/views/widget/location_widget.dart';
-import 'package:uber_shop_app/views/widget/men_product_widget.dart';
 import 'package:uber_shop_app/views/widget/reuse_text_widget.dart';
-import 'package:uber_shop_app/views/widget/women_product_widget.dart';
+import 'package:uber_shop_app/views/widget/set_product_widget.dart';
+import 'package:uber_shop_app/views/widget/top_product_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,17 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10,
           ),
           ReuseTextWidget(
-            title: "Men's Product",
+            title: "Top's Product",
           ),
           SizedBox(
             height: 10,
           ),
-          MenProductWidget(),
+          TopProductsWidget(),
           SizedBox(height: 10,),
           ReuseTextWidget(
-            title: "Women's Product",
+            title: "Set's Product",
           ),
-          WomenProductWidget(),
+          SetProductsWidget(),
         ],
       ),
     );

@@ -55,15 +55,29 @@ class _CategoryTextWidgetState extends State<CategoryTextWidget> {
                             child: ActionChip(
                               onPressed: () {},
                               backgroundColor: Colors.pink.shade900,
-                              label: Center(
-                                child: Text(
-                                  categoryData['categoryName'].toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                              // label: Center(
+                              //   child: Text(
+                              //     categoryData['categoryName'].toUpperCase(),
+                              //     style: TextStyle(
+                              //       color: Colors.white,
+                              //       fontSize: 12,
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
+                              label: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    categoryData['categoryName'].toUpperCase(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           );

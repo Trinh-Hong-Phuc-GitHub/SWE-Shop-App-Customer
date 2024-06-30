@@ -9,12 +9,15 @@ import 'package:rating_summary/rating_summary.dart';
 import 'package:uber_shop_app/provider/cart_provider.dart';
 import 'package:uber_shop_app/provider/selected_size_provider.dart';
 import 'package:uber_shop_app/views/screens/inner_screens/chat_screen.dart';
+import 'package:uber_shop_app/views/screens/inner_screens/vendor_store_detail_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../provider/favorite_provider.dart';
 
 class ProductDetailScreen extends ConsumerStatefulWidget {
   final dynamic productData;
 
-  const ProductDetailScreen({super.key, required this.productData});
+  ProductDetailScreen({super.key, required this.productData});
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -22,15 +25,6 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   int _imageIndex = 0;
-
-  // void callVendor(String phoneNumber) async {
-  //   final String url = "tel:$phoneNumber";
-  //   if(await canLaunchUrl(Uri.parse(url))){
-  //     await launchUrl(Uri.parse(url));
-  //   } else {
-  //     throw('Could Not Launch Phone Call');
-  //   }
-  // }
 
   Future<void> callVendor(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -42,6 +36,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _favoriteProvider = ref.read(favoriteProvider.notifier);
+    final favoriteItems = ref.watch(favoriteProvider);
+    final isFavorite = favoriteItems.containsKey(widget.productData['productId']);
+
     final Stream<QuerySnapshot> _productReviewsStream = FirebaseFirestore
         .instance
         .collection('productReviews')
@@ -145,34 +143,34 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   widget.productData['rating'] == 0
                       ? Text('')
                       : Padding(
-                          padding: const EdgeInsets.only(
-                            top: 4,
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                widget.productData['rating'].toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                              Text(
-                                "(${widget.productData['totalReviews']} Reviews)",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                            ],
+                    padding: const EdgeInsets.only(
+                      top: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        Text(
+                          widget.productData['rating'].toString(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1,
                           ),
                         ),
+                        Text(
+                          "(${widget.productData['totalReviews']} Reviews)",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -198,14 +196,11 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       Text(
                         widget.productData['description'],
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           letterSpacing: 2,
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                   ExpansionTile(
                     title: Text(
@@ -221,18 +216,31 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.productData['sizeList'].length,
                           itemBuilder: (context, index) {
+                            final size = widget.productData['sizeList'][index];
+                            final isSelected = size == selectedSize;
+
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: OutlinedButton(
-                                  onPressed: () {
-                                    final newSelected =
-                                        widget.productData['sizeList'][index];
-                                    ref
-                                        .read(selectedSizeProvider.notifier)
-                                        .setSelectedSize(newSelected);
-                                  },
-                                  child: Text(
-                                      widget.productData['sizeList'][index])),
+                                onPressed: () {
+                                  ref
+                                      .read(selectedSizeProvider.notifier)
+                                      .setSelectedSize(size);
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: isSelected
+                                      ? Colors.pink.shade100
+                                      : Colors.white,
+                                ),
+                                child: Text(
+                                  size,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.pink.shade900
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -243,6 +251,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     height: 10,
                   ),
                   ListTile(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return VendorStoreDetailScreen(
+                          vendorData: widget.productData,
+                        );
+                      }));
+                    },
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundImage: NetworkImage(
@@ -271,7 +286,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               padding: const EdgeInsets.all(8.0),
               child: RatingSummary(
                 counter: widget.productData['totalReviews'],
-                average: widget.productData['rating'],
+                average: widget.productData['rating'].toDouble(),
                 showAverage: true,
                 counterFiveStars: 5,
                 counterFourStars: 4,
@@ -310,7 +325,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           children: [
                             CircleAvatar(
                               backgroundImage:
-                                  NetworkImage(reviewData['buyerPhoto']),
+                              NetworkImage(reviewData['buyerPhoto']),
                             ),
                             SizedBox(
                               width: 5,
@@ -354,19 +369,19 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               onTap: isInCart
                   ? null
                   : () {
-                      _cartProvider.addProductToCart(
-                          widget.productData['productName'],
-                          widget.productData['productId'],
-                          widget.productData['productImage'],
-                          1,
-                          widget.productData['productQuantity'],
-                          widget.productData['productPrice'],
-                          widget.productData['vendorId'],
-                          selectedSize);
+                _cartProvider.addProductToCart(
+                    widget.productData['productName'],
+                    widget.productData['productId'],
+                    widget.productData['productImage'],
+                    1,
+                    widget.productData['productQuantity'],
+                    widget.productData['productPrice'],
+                    widget.productData['vendorId'],
+                    selectedSize);
 
-                      print(
-                          _cartProvider.getCartItems.values.first.productName);
-                    },
+                print(
+                    _cartProvider.getCartItems.values.first.productName);
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: isInCart ? Colors.grey : Colors.pink.shade900,
@@ -392,6 +407,32 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     ],
                   ),
                 ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                if (isFavorite) {
+                  _favoriteProvider.removeItem(widget.productData['productId']);
+                } else {
+                  _favoriteProvider.addProductToFavorite(
+                    widget.productData['productName'],
+                    widget.productData['productId'],
+                    widget.productData['productImage'],
+                    1,
+                    widget.productData['productQuantity'],
+                    widget.productData['productPrice'],
+                    widget.productData['vendorId'],
+                  );
+                }
+              },
+              icon: isFavorite
+                  ? Icon(
+                Icons.favorite,
+                color: Colors.red,
+              )
+                  : Icon(
+                Icons.favorite_border,
+                color: Colors.red,
               ),
             ),
             IconButton(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -64,8 +65,23 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Orders',
+        title: Row(
+          children: [
+            Icon(
+              CupertinoIcons.bag,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              'Order',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 5,
+              ),
+            ),
+          ],
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -187,6 +203,20 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                               ),
                               Text(
                                 data['email'],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                data['address'],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                data['phoneNumber'],
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w400,

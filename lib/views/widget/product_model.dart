@@ -21,7 +21,9 @@ class _ProductModelState extends ConsumerState<ProductModel> {
   @override
   Widget build(BuildContext context) {
     final _favoriteProvider = ref.read(favoriteProvider.notifier);
-    ref.watch(favoriteProvider);
+    final favoriteItems = ref.watch(favoriteProvider);
+    final isFavorite = favoriteItems.containsKey(widget.productData['productId']);
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -102,22 +104,22 @@ class _ProductModelState extends ConsumerState<ProductModel> {
                         widget.productData['rating'] == 0
                             ? SizedBox()
                             : Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                    size: 14,
-                                  ),
-                                  Text(
-                                    widget.productData['rating'].toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              )
+                          children: [
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 14,
+                            ),
+                            Text(
+                              widget.productData['rating'].toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -130,26 +132,29 @@ class _ProductModelState extends ConsumerState<ProductModel> {
             top: 15,
             child: IconButton(
               onPressed: () {
-                _favoriteProvider.addProductToFavorite(
-                  widget.productData['productName'],
-                  widget.productData['productId'],
-                  widget.productData['productImage'],
-                  1,
-                  widget.productData['productQuantity'],
-                  widget.productData['productPrice'],
-                  widget.productData['vendorId'],
-                );
+                if (isFavorite) {
+                  _favoriteProvider.removeItem(widget.productData['productId']);
+                } else {
+                  _favoriteProvider.addProductToFavorite(
+                    widget.productData['productName'],
+                    widget.productData['productId'],
+                    widget.productData['productImage'],
+                    1,
+                    widget.productData['productQuantity'],
+                    widget.productData['productPrice'],
+                    widget.productData['vendorId'],
+                  );
+                }
               },
-              icon: _favoriteProvider.getFavoriteItem
-                      .containsKey(widget.productData['productId'])
+              icon: isFavorite
                   ? Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    )
+                Icons.favorite,
+                color: Colors.red,
+              )
                   : Icon(
-                      Icons.favorite_border,
-                      color: Colors.red,
-                    ),
+                Icons.favorite_border,
+                color: Colors.red,
+              ),
             ),
           ),
         ],

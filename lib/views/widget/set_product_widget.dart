@@ -4,14 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_shop_app/views/widget/product_model.dart';
 
-class MenProductWidget extends StatelessWidget {
-  const MenProductWidget({super.key});
+class SetProductsWidget extends StatelessWidget {
+  const SetProductsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where('category', isEqualTo: 'Men')
+        .where('category', isEqualTo: 'Sets')
+        .where('approved', isEqualTo: true)
         .snapshots();
     return StreamBuilder<QuerySnapshot>(
       stream: _productsStream,
@@ -24,14 +25,6 @@ class MenProductWidget extends StatelessWidget {
           return Text("Loading");
         }
 
-        if (snapshot.data!.docs.isEmpty) {
-          return Center(
-            child: Text('No Men Product', style: TextStyle(fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.blueGrey,
-              letterSpacing: 4,),),
-          );
-        }
         return Container(
           height: 100,
           child: PageView.builder(

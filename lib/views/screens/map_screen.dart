@@ -18,7 +18,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  Completer<GoogleMapController>();
   late GoogleMapController mapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(

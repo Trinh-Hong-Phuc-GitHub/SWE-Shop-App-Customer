@@ -87,6 +87,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   ),
                                 ),
                                 Text(
+                                  'Size ' + cartItem.productSize,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
                                   cartItem.price.toStringAsFixed(2),
                                   style: TextStyle(
                                       fontSize: 18,

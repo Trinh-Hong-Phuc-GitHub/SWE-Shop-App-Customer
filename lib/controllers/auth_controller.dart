@@ -16,7 +16,7 @@ class AuthController {
 
     XFile? _file = await _imagePicker.pickImage(source: source);
 
-    if(_file!= null){
+    if (_file != null) {
       return await _file.readAsBytes();
     } else {
       print('No Image Selected Or Captured');
@@ -25,7 +25,8 @@ class AuthController {
 
   // Function To Upload Image To Firebase Storage
   _uploadImageToStorage(Uint8List? image) async {
-    Reference ref = _storage.ref().child('profileImages').child(_auth.currentUser!.uid);
+    Reference ref =
+        _storage.ref().child('profileImages').child(_auth.currentUser!.uid);
     UploadTask uploadTask = ref.putData(image!);
 
     TaskSnapshot snapshot = await uploadTask;
@@ -36,18 +37,27 @@ class AuthController {
   }
 
   Future<String> createNewUser(
-      String email, String fullName, String password, Uint8List? image) async {
+    String email,
+    String fullName,
+    String password,
+    Uint8List? image,
+  ) async {
     String res = 'some error occured';
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       String downloadUrl = await _uploadImageToStorage(image);
 
       await _firestore.collection('buyers').doc(userCredential.user!.uid).set({
+        'longitude': '',
+        'latitude': '',
+        'placeName': '',
         'fullName': fullName,
         'profileImage': downloadUrl,
         'email': email,
+        'address': '',
+        'phoneNumber': '',
         'buyerId': userCredential.user!.uid,
       });
       res = 'success';
@@ -69,5 +79,14 @@ class AuthController {
       res = e.toString();
     }
     return res;
+  }
+
+  Future<String> sendPasswordResetLink(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return 'success';
+    } catch (e) {
+      return e.toString();
+    }
   }
 }

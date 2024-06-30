@@ -1,20 +1,23 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_shop_app/views/screens/auth/login_screen.dart';
+import 'package:uber_shop_app/views/screens/cart_screen.dart';
 import 'package:uber_shop_app/views/screens/inner_screens/customer_order_screen.dart';
 import 'package:uber_shop_app/views/screens/inner_screens/edit_profile_screen.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
+  @override
+  _AccountScreenState createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference buyers = FirebaseFirestore.instance.collection('buyers');
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference buyers =
-        FirebaseFirestore.instance.collection('buyers');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,20 +29,10 @@ class AccountScreen extends StatelessWidget {
             letterSpacing: 4,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.sunny_snowing,
-              color: Colors.pink,
-            ),
-          ),
-        ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: buyers.doc(_auth.currentUser!.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
@@ -49,24 +42,20 @@ class AccountScreen extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            String phoneNumber = data['phoneNumber'] ?? '';
+            String address = data['address'] ?? '';
+
             return SingleChildScrollView(
               child: Center(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 15,
-                    ),
+                    SizedBox(height: 15),
                     CircleAvatar(
                       radius: 65,
-                      backgroundImage: NetworkImage(
-                        data['profileImage'],
-                      ),
+                      backgroundImage: NetworkImage(data['profileImage']),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    SizedBox(height: 15),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -113,32 +102,119 @@ class AccountScreen extends StatelessWidget {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(
-                        Icons.settings,
-                      ),
+                      leading: Icon(Icons.map),
                       title: Text(
-                        "Settings",
+                        "Address",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      subtitle: Text(address),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () async {
+                          String newAddress = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              TextEditingController controller = TextEditingController(text: address);
+                              return AlertDialog(
+                                title: Text("Edit Address"),
+                                content: TextField(
+                                  controller: controller,
+                                  decoration: InputDecoration(
+                                    hintText: "Enter new address",
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text("Save"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(controller.text.trim());
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (newAddress != null) {
+                            // Update Firestore with the new address
+                            await buyers.doc(_auth.currentUser!.uid).update({'address': newAddress});
+                            setState(() {
+                              address = newAddress;
+                            });
+                          }
+                        },
+                      ),
                     ),
                     ListTile(
-                      leading: Icon(
-                        Icons.phone,
-                      ),
+                      leading: Icon(Icons.phone),
                       title: Text(
                         'Phone',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text('35435435345435'),
+                      subtitle: Text(phoneNumber),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () async {
+                          String newPhoneNumber = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              TextEditingController controller = TextEditingController(text: phoneNumber);
+                              return AlertDialog(
+                                title: Text("Edit Phone Number"),
+                                content: TextField(
+                                  controller: controller,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: InputDecoration(
+                                    hintText: "Enter new phone number",
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text("Save"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(controller.text.trim());
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (newPhoneNumber != null) {
+                            // Update Firestore with the new phone number
+                            await buyers.doc(_auth.currentUser!.uid).update({'phoneNumber': newPhoneNumber});
+                            setState(() {
+                              phoneNumber = newPhoneNumber;
+                            });
+                          }
+                        },
+                      ),
                     ),
                     ListTile(
-                      leading: Icon(
-                        CupertinoIcons.shopping_cart,
-                      ),
+                      leading: Icon(Icons.shopping_cart),
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return CartScreen();
+                          },
+                        ));
+                      },
                       title: Text(
                         'Cart',
                         style: TextStyle(
@@ -154,9 +230,7 @@ class AccountScreen extends StatelessWidget {
                           },
                         ));
                       },
-                      leading: Icon(
-                        CupertinoIcons.bag,
-                      ),
+                      leading: Icon(CupertinoIcons.bag),
                       title: Text(
                         'Orders',
                         style: TextStyle(
@@ -167,15 +241,12 @@ class AccountScreen extends StatelessWidget {
                     ListTile(
                       onTap: () async {
                         await _auth.signOut().whenComplete(() {
-                          return Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
+                          return Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                             return LoginScreen();
                           }));
                         });
                       },
-                      leading: Icon(
-                        Icons.logout,
-                      ),
+                      leading: Icon(Icons.logout),
                       title: Text(
                         'Log out',
                         style: TextStyle(

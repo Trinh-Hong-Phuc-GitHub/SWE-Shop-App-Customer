@@ -58,15 +58,6 @@ class CartNotifier extends StateNotifier<Map<String, CartModel>> {
     }
   }
 
-  // void decrementItem(String productId) {
-  //   if (state.containsKey(productId)) {
-  //     state[productId]!.quantity--;
-  //
-  //     //notify listeners that the state has changed
-  //     state = {...state};
-  //   }
-  // }
-
   void decrementItem(String productId) {
     if (state.containsKey(productId) && state[productId]!.quantity > 1) {
       state[productId]!.quantity--;

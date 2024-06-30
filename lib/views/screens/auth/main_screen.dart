@@ -5,6 +5,7 @@ import 'package:uber_shop_app/views/screens/cart_screen.dart';
 import 'package:uber_shop_app/views/screens/category_screen.dart';
 import 'package:uber_shop_app/views/screens/favorite_screen.dart';
 import 'package:uber_shop_app/views/screens/home_screen.dart';
+import 'package:uber_shop_app/views/screens/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     CategoryScreen(),
     CartScreen(),
     FavoriteScreen(),
+    SearchScreen(),
     AccountScreen()
   ];
 
@@ -55,6 +57,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset('assets/icons/favorite.svg'),
             label: 'FAVORITE',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/icons/search.svg'),
+            label: 'SEARCH',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('assets/icons/account.svg'),

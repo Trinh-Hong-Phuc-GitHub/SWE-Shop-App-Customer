@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:uber_shop_app/views/screens/inner_screens/product_detail_screen.dart';
 
 class CategoryProductScreen extends StatefulWidget {
   final dynamic categoryData;
@@ -11,12 +12,16 @@ class CategoryProductScreen extends StatefulWidget {
 }
 
 class _CategoryProductScreenState extends State<CategoryProductScreen> {
+  String _sortBy = 'default'; // default sorting option
+
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _productStream = FirebaseFirestore.instance
         .collection('products')
         .where('category', isEqualTo: widget.categoryData['categoryName'])
+        .where('approved', isEqualTo: true)
         .snapshots();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,6 +31,30 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
             letterSpacing: 4,
           ),
         ),
+        actions: [
+          DropdownButton<String>(
+            value: _sortBy,
+            onChanged: (value) {
+              setState(() {
+                _sortBy = value!;
+              });
+            },
+            items: [
+              DropdownMenuItem(
+                child: Text('Default'),
+                value: 'default',
+              ),
+              DropdownMenuItem(
+                child: Text('Price: Low to High'),
+                value: 'priceLowToHigh',
+              ),
+              DropdownMenuItem(
+                child: Text('Price: High to Low'),
+                value: 'priceHighToLow',
+              ),
+            ],
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _productStream,
@@ -54,8 +83,17 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
             );
           }
 
+          List<QueryDocumentSnapshot> products = snapshot.data!.docs;
+
+          // Apply sorting based on the selected option
+          if (_sortBy == 'priceLowToHigh') {
+            products.sort((a, b) => a['productPrice'].compareTo(b['productPrice']));
+          } else if (_sortBy == 'priceHighToLow') {
+            products.sort((a, b) => b['productPrice'].compareTo(a['productPrice']));
+          }
+
           return GridView.builder(
-            itemCount: snapshot.data!.size,
+            itemCount: products.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 8,
@@ -63,47 +101,56 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
               childAspectRatio: 200 / 300,
             ),
             itemBuilder: (context, index) {
-              final productData = snapshot.data!.docs[index];
-              return Card(
-                elevation: 4,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 170,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            productData['productImage'][0],
+              final productData = products[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ProductDetailScreen(
+                      productData: productData,
+                    );
+                  }));
+                },
+                child: Card(
+                  elevation: 4,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 170,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              productData['productImage'][0],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        productData['productName'],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          productData['productName'],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 4,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '\$' + productData['productPrice'].toStringAsFixed(2),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4,
-                          color: Colors.pink,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '\$' + productData['productPrice'].toStringAsFixed(2),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 4,
+                            color: Colors.pink.shade900,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
