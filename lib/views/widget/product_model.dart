@@ -129,7 +129,7 @@ class _ProductModelState extends ConsumerState<ProductModel> {
           ),
           Positioned(
             right: 15,
-            top: 15,
+            top: 25,
             child: IconButton(
               onPressed: () {
                 if (isFavorite) {

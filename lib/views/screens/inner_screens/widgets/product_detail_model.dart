@@ -71,7 +71,7 @@ class ProductDetailModel extends ConsumerWidget {
                         Text(
                           productData['productName'],
                           style: TextStyle(
-                            fontSize: 21,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.525 * fem,
                             color: Color(0xff000000),
@@ -99,7 +99,7 @@ class ProductDetailModel extends ConsumerWidget {
           ),
           Positioned(
             right: 15,
-            top: 8,
+            top: 12,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(

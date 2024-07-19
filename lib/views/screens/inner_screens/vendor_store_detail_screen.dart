@@ -64,6 +64,13 @@ class VendorStoreDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                Text(
+                  vendorData['vendorAddress'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -108,29 +115,29 @@ class VendorStoreDetailScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20),
-                              snapshot.data!.size >= 4
-                                  ? Row(
-                                children: [
-                                  Text(
-                                    'verified',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.verified,
-                                    color: Colors.pink,
-                                  ),
-                                ],
-                              )
-                                  : Text(
-                                'Not verified',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
+                              // SizedBox(height: 20),
+                              // snapshot.data!.size >= 4
+                              //     ? Row(
+                              //   children: [
+                              //     Text(
+                              //       'verified',
+                              //       style: TextStyle(
+                              //         fontSize: 20,
+                              //       ),
+                              //     ),
+                              //     Icon(
+                              //       Icons.verified,
+                              //       color: Colors.pink,
+                              //     ),
+                              //   ],
+                              // )
+                              //     : Text(
+                              //   'Not verified',
+                              //   style: TextStyle(
+                              //     fontSize: 20,
+                              //     decoration: TextDecoration.underline,
+                              //   ),
+                              // ),
                             ],
                           ),
                         );

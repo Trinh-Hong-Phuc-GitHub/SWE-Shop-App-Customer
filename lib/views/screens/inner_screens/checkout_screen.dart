@@ -194,34 +194,38 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            cartItem.productName,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Size ' + cartItem.productSize,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            cartItem.price.toStringAsFixed(2),
-                                            style: TextStyle(
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              cartItem.productName,
+                                              style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.pink),
-                                          ),
-                                        ],
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            Text(
+                                              'Size ' + cartItem.productSize,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              cartItem.price.toStringAsFixed(2),
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.pink),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -270,6 +274,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   'productImage': item.imageUrl,
                   'vendorQuantity': item.productQuantity,
                   'accepted': false,
+                  'orderStatus': 'Packing',
                   'orderDate': DateTime.now(),
                 }).whenComplete(() {
                   // Order completed successfully, show dialog and clear cart

@@ -282,11 +282,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 ],
               ),
             ),
-            Padding(
+            widget.productData['rating'] == 0
+                ? Text('')
+                : Padding(
               padding: const EdgeInsets.all(8.0),
               child: RatingSummary(
                 counter: widget.productData['totalReviews'],
-                average: widget.productData['rating'].toDouble(),
+                average: widget.productData['rating'],
                 showAverage: true,
                 counterFiveStars: 5,
                 counterFourStars: 4,
@@ -370,17 +372,15 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   ? null
                   : () {
                 _cartProvider.addProductToCart(
-                    widget.productData['productName'],
-                    widget.productData['productId'],
-                    widget.productData['productImage'],
-                    1,
-                    widget.productData['productQuantity'],
-                    widget.productData['productPrice'],
-                    widget.productData['vendorId'],
-                    selectedSize);
-
-                print(
-                    _cartProvider.getCartItems.values.first.productName);
+                  widget.productData['productName'],
+                  widget.productData['productId'],
+                  widget.productData['productImage'],
+                  1,
+                  widget.productData['productQuantity'],
+                  widget.productData['productPrice'],
+                  widget.productData['vendorId'],
+                  selectedSize, // Pass selectedSize here
+                );
               },
               child: Container(
                 decoration: BoxDecoration(

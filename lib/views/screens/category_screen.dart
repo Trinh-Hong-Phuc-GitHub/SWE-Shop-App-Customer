@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:uber_shop_app/views/screens/inner_screens/category_products.dart';
+import 'package:uber_shop_app/views/screens/inner_screens/category_product_screen.dart';
 
 class CategoryScreen extends StatelessWidget {
   const CategoryScreen({super.key});

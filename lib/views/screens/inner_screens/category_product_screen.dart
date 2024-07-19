@@ -135,6 +135,8 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                             fontWeight: FontWeight.bold,
                             letterSpacing: 4,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ),
                       Padding(

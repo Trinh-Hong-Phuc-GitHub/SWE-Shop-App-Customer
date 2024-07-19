@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_shop_app/views/widget/product_model.dart';
 
-class SetProductsWidget extends StatelessWidget {
-  const SetProductsWidget({super.key});
+class AccessoriesProductsWidget extends StatelessWidget {
+  const AccessoriesProductsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where('category', isEqualTo: 'Sets')
+        .where('category', isEqualTo: 'Accessories')
         .where('approved', isEqualTo: true)
         .snapshots();
     return StreamBuilder<QuerySnapshot>(

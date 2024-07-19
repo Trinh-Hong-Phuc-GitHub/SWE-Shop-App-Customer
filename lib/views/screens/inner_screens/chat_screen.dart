@@ -47,6 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (message.isNotEmpty) {
       await _firestore.collection('chats').add({
         'productId': widget.productId,
+        'productName': widget.productName,
         'buyerName': (buyerDoc.data() as Map<String, dynamic>)['fullName'],
         'buyerPhoto': (buyerDoc.data() as Map<String, dynamic>)['profileImage'],
         'sellerPhoto': (vendorDoc.data() as Map<String, dynamic>)['storeImage'],

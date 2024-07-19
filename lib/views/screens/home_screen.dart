@@ -4,7 +4,7 @@ import 'package:uber_shop_app/views/widget/category_text_widget.dart';
 import 'package:uber_shop_app/views/widget/home_products_widget.dart';
 import 'package:uber_shop_app/views/widget/location_widget.dart';
 import 'package:uber_shop_app/views/widget/reuse_text_widget.dart';
-import 'package:uber_shop_app/views/widget/set_product_widget.dart';
+import 'package:uber_shop_app/views/widget/accessories_product_widget.dart';
 import 'package:uber_shop_app/views/widget/top_product_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
           TopProductsWidget(),
           SizedBox(height: 10,),
           ReuseTextWidget(
-            title: "Set's Product",
+            title: "Accessories's Product",
           ),
-          SetProductsWidget(),
+          AccessoriesProductsWidget(),
         ],
       ),
     );

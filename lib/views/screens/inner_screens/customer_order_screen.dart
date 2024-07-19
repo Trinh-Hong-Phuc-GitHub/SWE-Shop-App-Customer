@@ -181,6 +181,24 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 ),
                               ],
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Size',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  data['productSize'],
+                                  style: TextStyle(
+                                    color: Colors.pink.shade900,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         subtitle: ListTile(
@@ -235,7 +253,19 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   ),
                                 ),
                               ),
-                              data['accepted'] == true
+                              if (data['accepted'] == true)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Order Status: ' + data['orderStatus'],
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              data['accepted'] == true && data['orderStatus'] == 'Delivered Successfully'
                                   ? ElevatedButton(
                                       onPressed: () async {
                                         final productId = data['productId'];

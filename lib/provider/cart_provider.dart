@@ -9,33 +9,37 @@ class CartNotifier extends StateNotifier<Map<String, CartModel>> {
   CartNotifier() : super({});
 
   void addProductToCart(
-    String productName,
-    String productId,
-    List imageUrl,
-    int quantity,
-    int productQuantity,
-    double price,
-    String vendorId,
-    String productSize,
-  ) {
-    if (state.containsKey(productId)) {
+      String productName,
+      String productId,
+      List imageUrl,
+      int quantity,
+      int productQuantity,
+      double price,
+      String vendorId,
+      String productSize,
+      ) {
+    final cartItemId = '$productId-$productSize'; // Unique identifier for cart items
+
+    if (state.containsKey(cartItemId)) {
+      // If the item with the same productId and productSize is already in cart
       state = {
         ...state,
-        productId: CartModel(
-          productName: state[productId]!.productName,
-          productId: state[productId]!.productId,
-          imageUrl: state[productId]!.imageUrl,
-          quantity: state[productId]!.quantity + 1,
-          productQuantity: state[productId]!.productQuantity,
-          price: state[productId]!.price,
-          vendorId: state[productId]!.vendorId,
-          productSize: state[productId]!.productSize,
-        )
+        cartItemId: CartModel(
+          productName: state[cartItemId]!.productName,
+          productId: state[cartItemId]!.productId,
+          imageUrl: state[cartItemId]!.imageUrl,
+          quantity: state[cartItemId]!.quantity + 1,
+          productQuantity: state[cartItemId]!.productQuantity,
+          price: state[cartItemId]!.price,
+          vendorId: state[cartItemId]!.vendorId,
+          productSize: state[cartItemId]!.productSize,
+        ),
       };
     } else {
+      // If the item with productId and productSize is not in cart, add it
       state = {
         ...state,
-        productId: CartModel(
+        cartItemId: CartModel(
           productName: productName,
           productId: productId,
           imageUrl: imageUrl,
@@ -44,38 +48,53 @@ class CartNotifier extends StateNotifier<Map<String, CartModel>> {
           price: price,
           vendorId: vendorId,
           productSize: productSize,
-        )
+        ),
       };
     }
   }
 
-  void incrementItem(String productId) {
-    if (state.containsKey(productId)) {
-      state[productId]!.quantity++;
-
-      //notify listeners that the state has changed
-      state = {...state};
+  void incrementItem(String cartItemId) {
+    if (state.containsKey(cartItemId)) {
+      state = {
+        ...state,
+        cartItemId: CartModel(
+          productName: state[cartItemId]!.productName,
+          productId: state[cartItemId]!.productId,
+          imageUrl: state[cartItemId]!.imageUrl,
+          quantity: state[cartItemId]!.quantity + 1,
+          productQuantity: state[cartItemId]!.productQuantity,
+          price: state[cartItemId]!.price,
+          vendorId: state[cartItemId]!.vendorId,
+          productSize: state[cartItemId]!.productSize,
+        ),
+      };
     }
   }
 
-  void decrementItem(String productId) {
-    if (state.containsKey(productId) && state[productId]!.quantity > 1) {
-      state[productId]!.quantity--;
-
-      // Notify listeners that the state has changed
-      state = {...state};
+  void decrementItem(String cartItemId) {
+    if (state.containsKey(cartItemId) && state[cartItemId]!.quantity > 1) {
+      state = {
+        ...state,
+        cartItemId: CartModel(
+          productName: state[cartItemId]!.productName,
+          productId: state[cartItemId]!.productId,
+          imageUrl: state[cartItemId]!.imageUrl,
+          quantity: state[cartItemId]!.quantity - 1,
+          productQuantity: state[cartItemId]!.productQuantity,
+          price: state[cartItemId]!.price,
+          vendorId: state[cartItemId]!.vendorId,
+          productSize: state[cartItemId]!.productSize,
+        ),
+      };
     }
   }
 
   void removeAllItem() {
-    state.clear();
-
-    state = {...state};
+    state = {};
   }
 
-  void removeItem(String productId) {
-    state.remove(productId);
-
+  void removeItem(String cartItemId) {
+    state.remove(cartItemId);
     state = {...state};
   }
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uber_shop_app/views/screens/category_screen.dart';
 
-import '../screens/inner_screens/category_products.dart';
+import '../screens/inner_screens/category_product_screen.dart';
 
 class CategoryTextWidget extends StatefulWidget {
   const CategoryTextWidget({super.key});
