@@ -349,6 +349,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            SizedBox(
+                              width: 15,
+                            ),
                           ],
                         );
                       },

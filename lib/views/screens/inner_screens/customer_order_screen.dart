@@ -259,9 +259,17 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   child: Text(
                                     'Order Status: ' + data['orderStatus'],
                                     style: TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              if (data['accepted'] == false)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Order Status: Not Accepted',
+                                    style: TextStyle(
                                       color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
                                     ),
                                   ),
                                 ),

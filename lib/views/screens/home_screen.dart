@@ -6,6 +6,7 @@ import 'package:uber_shop_app/views/widget/location_widget.dart';
 import 'package:uber_shop_app/views/widget/reuse_text_widget.dart';
 import 'package:uber_shop_app/views/widget/accessories_product_widget.dart';
 import 'package:uber_shop_app/views/widget/top_product_widget.dart';
+import 'package:uber_shop_app/views/widget/welcome_wiget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LocationWidget(),
+          // LocationWidget(),
+          WelcomeWidget(),
           SizedBox(
             height: 10,
           ),
