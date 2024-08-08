@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -19,9 +20,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
 
   String formatedDate(date) {
     final outPutDateFormate = DateFormat("dd/MM/yyyy");
-
     final outPutDate = outPutDateFormate.format(date);
-
     return outPutDate;
   }
 
@@ -74,7 +73,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
               width: 5,
             ),
             Text(
-              'Order',
+              'Đơn Hàng',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -101,109 +100,369 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              return Column(
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 14,
-                      child: data['accepted'] == true
-                          ? Icon(Icons.delivery_dining)
-                          : Icon(Icons.access_time),
-                    ),
-                    title: data['accepted'] == true
-                        ? Text(
-                            'Accepted',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          )
-                        : Text(
-                            'Not Accepted',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
+              return Slidable(
+                key: ValueKey(data['orderId']),
+                endActionPane: data['accepted'] == false
+                    ? ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) async {
+                              await FirebaseFirestore.instance
+                                  .collection('orders')
+                                  .doc(document.id)
+                                  .delete();
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Hủy Đơn Hàng',
                           ),
-                    trailing: Text(
-                      "\$" + data['price'].toStringAsFixed(2),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        ],
+                      )
+                    : null,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 14,
+                        child: data['accepted'] == true
+                            ? Icon(Icons.delivery_dining)
+                            : Icon(Icons.access_time),
                       ),
-                    ),
-                  ),
-                  ExpansionTile(
-                    title: Text(
-                      'Order Details',
-                      style: TextStyle(
-                        color: Colors.pink.shade900,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'View Order Details',
-                    ),
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: Image.network(
-                            data['productImage'][0],
-                          ),
-                        ),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              data['productName'],
+                      title: data['accepted'] == true
+                          ? Text(
+                              'Xác Nhận',
                               style: TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            )
+                          : Text(
+                              'Chưa Xác Nhận',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Quantity',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  data['quantity'].toString(),
-                                  style: TextStyle(
-                                    color: Colors.pink.shade900,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'Size',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  data['productSize'],
-                                  style: TextStyle(
-                                    color: Colors.pink.shade900,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                      trailing: Text(
+                        data['totalPrice'].toStringAsFixed(0) + ' đ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
                         ),
-                        subtitle: ListTile(
+                      ),
+                    ),
+                    ExpansionTile(
+                      title: Text(
+                        'Mô Tả Đơn Hàng',
+                        style: TextStyle(
+                          color: Colors.pink.shade900,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Xem Chi Tiết',
+                      ),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: data['products'].length,
+                          itemBuilder: (context, index) {
+                            final product = data['products'][index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                child: Image.network(
+                                  product['productImage'][0],
+                                ),
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product['productName'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'Số Lượng',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        product['quantity'].toString(),
+                                        style: TextStyle(
+                                          color: Colors.pink.shade900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'Size',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        product['productSize'],
+                                        style: TextStyle(
+                                          color: Colors.pink.shade900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'Giá',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        product['price'].toStringAsFixed(0) + ' đ',
+                                        style: TextStyle(
+                                          color: Colors.pink.shade900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  data['accepted'] == true &&
+                                          data['orderStatus'] ==
+                                              'Giao Thành Công'
+                                      ? Center(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              final productId =
+                                                  product['productId'];
+                                              final hasReviewed =
+                                                  await hasUserReviewedProduct(
+                                                      productId);
+                                              if (hasReviewed) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                          'Cập Nhật Đánh Giá'),
+                                                      content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          TextFormField(
+                                                            controller:
+                                                                _reviewController,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText:
+                                                                  'Đánh giá của bạn',
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: RatingBar
+                                                                .builder(
+                                                              initialRating:
+                                                                  rating,
+                                                              itemCount: 5,
+                                                              minRating: 1,
+                                                              maxRating: 5,
+                                                              allowHalfRating:
+                                                                  true,
+                                                              itemSize: 15,
+                                                              unratedColor:
+                                                                  Colors.grey,
+                                                              itemPadding:
+                                                                  EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 4,
+                                                              ),
+                                                              itemBuilder:
+                                                                  (context, _) {
+                                                                return Icon(
+                                                                  Icons.star,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                );
+                                                              },
+                                                              onRatingUpdate:
+                                                                  (value) {
+                                                                rating = value;
+                                                              },
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () async {
+                                                            final review =
+                                                                _reviewController
+                                                                    .text;
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'productReviews')
+                                                                .doc(data[
+                                                                    'orderId'])
+                                                                .update({
+                                                              'productId': product[
+                                                                  'productId'],
+                                                              'fullName': data[
+                                                                  'fullName'],
+                                                              'buyerId': data[
+                                                                  'buyerId'],
+                                                              'rating': rating,
+                                                              'review': review,
+                                                              'email':
+                                                                  data['email'],
+                                                            }).whenComplete(() {
+                                                              updateProductRating(
+                                                                  productId);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              _reviewController
+                                                                  .clear();
+                                                            });
+                                                          },
+                                                          child: Text('Lưu'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text('Thêm Đánh Giá'),
+                                                      content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          TextFormField(
+                                                            controller:
+                                                                _reviewController,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText:
+                                                                  'Đánh giá của bạn',
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: RatingBar
+                                                                .builder(
+                                                              initialRating:
+                                                                  rating,
+                                                              itemCount: 5,
+                                                              minRating: 1,
+                                                              maxRating: 5,
+                                                              allowHalfRating:
+                                                                  true,
+                                                              itemSize: 15,
+                                                              unratedColor:
+                                                                  Colors.grey,
+                                                              itemPadding:
+                                                                  EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 4,
+                                                              ),
+                                                              itemBuilder:
+                                                                  (context, _) {
+                                                                return Icon(
+                                                                  Icons.star,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                );
+                                                              },
+                                                              onRatingUpdate:
+                                                                  (value) {
+                                                                rating = value;
+                                                              },
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () async {
+                                                            final review =
+                                                                _reviewController
+                                                                    .text;
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'productReviews')
+                                                                .doc(data[
+                                                                    'orderId'])
+                                                                .set({
+                                                              'productId': product[
+                                                                  'productId'],
+                                                              'fullName': data[
+                                                                  'fullName'],
+                                                              'buyerId': data[
+                                                                  'buyerId'],
+                                                              'rating': rating,
+                                                              'review': review,
+                                                              'email':
+                                                                  data['email'],
+                                                              'buyerPhoto': data[
+                                                                  'profileImage'],
+                                                            }).whenComplete(() {
+                                                              updateProductRating(
+                                                                  productId);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              _reviewController
+                                                                  .clear();
+                                                            });
+                                                          },
+                                                          child: Text('Submit'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: Text('Đánh Giá'),
+                                          ),
+                                        )
+                                      : Text(''),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
                           title: Text(
-                            'Buyer Details',
+                            'Thông Tin Người Mua',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -243,7 +502,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Order Date' +
+                                  'Thời Gian Đặt:' +
                                       " " +
                                       formatedDate(
                                         data['orderDate'].toDate(),
@@ -257,7 +516,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    'Order Status: ' + data['orderStatus'],
+                                    'Trạng Thái:' + ' ' + data['orderStatus'],
                                     style: TextStyle(
                                       color: Colors.green,
                                     ),
@@ -267,206 +526,19 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    'Order Status: Not Accepted',
+                                    'Trạng Thái: Chưa Xác Nhận',
                                     style: TextStyle(
                                       color: Colors.red,
                                     ),
                                   ),
                                 ),
-                              data['accepted'] == true && data['orderStatus'] == 'Delivered Successfully'
-                                  ? ElevatedButton(
-                                      onPressed: () async {
-                                        final productId = data['productId'];
-                                        final hasReviewed =
-                                            await hasUserReviewedProduct(
-                                                productId);
-                                        if (hasReviewed) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text('Update Review'),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    TextFormField(
-                                                      controller:
-                                                          _reviewController,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            'Update Your Review',
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: RatingBar.builder(
-                                                        initialRating: rating,
-                                                        itemCount: 5,
-                                                        minRating: 1,
-                                                        maxRating: 5,
-                                                        allowHalfRating: true,
-                                                        itemSize: 15,
-                                                        unratedColor:
-                                                            Colors.grey,
-                                                        itemPadding: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 4,
-                                                        ),
-                                                        itemBuilder:
-                                                            (context, _) {
-                                                          return Icon(
-                                                            Icons.star,
-                                                            color: Colors.amber,
-                                                          );
-                                                        },
-                                                        onRatingUpdate:
-                                                            (value) {
-                                                          rating = value;
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      final review =
-                                                          _reviewController
-                                                              .text;
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'productReviews')
-                                                          .doc(data['orderId'])
-                                                          .update({
-                                                        'productId':
-                                                            data['productId'],
-                                                        'fullName':
-                                                            data['fullName'],
-                                                        'buyerId':
-                                                            data['buyerId'],
-                                                        'rating': rating,
-                                                        'review': review,
-                                                        'email': data['email'],
-                                                      }).whenComplete(() {
-                                                        updateProductRating(
-                                                            productId);
-                                                        Navigator.pop(context);
-                                                        _reviewController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Text('Submit'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text('Leave A Review'),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    TextFormField(
-                                                      controller:
-                                                          _reviewController,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            'Your Review',
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: RatingBar.builder(
-                                                        initialRating: rating,
-                                                        itemCount: 5,
-                                                        minRating: 1,
-                                                        maxRating: 5,
-                                                        allowHalfRating: true,
-                                                        itemSize: 15,
-                                                        unratedColor:
-                                                            Colors.grey,
-                                                        itemPadding: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 4,
-                                                        ),
-                                                        itemBuilder:
-                                                            (context, _) {
-                                                          return Icon(
-                                                            Icons.star,
-                                                            color: Colors.amber,
-                                                          );
-                                                        },
-                                                        onRatingUpdate:
-                                                            (value) {
-                                                          rating = value;
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      final review =
-                                                          _reviewController
-                                                              .text;
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'productReviews')
-                                                          .doc(data['orderId'])
-                                                          .set({
-                                                        'productId':
-                                                            data['productId'],
-                                                        'fullName':
-                                                            data['fullName'],
-                                                        'buyerId':
-                                                            data['buyerId'],
-                                                        'rating': rating,
-                                                        'review': review,
-                                                        'email': data['email'],
-                                                        'buyerPhoto':data['profileImage'],
-                                                      }).whenComplete(() {
-                                                        updateProductRating(
-                                                            productId);
-                                                        Navigator.pop(context);
-                                                        _reviewController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Text('Submit'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                      child: Text(
-                                        'Review',
-                                      ),
-                                    )
-                                  : Text(''),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               );
             }).toList(),
           );

@@ -26,7 +26,7 @@ class VendorStoreDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Vendor Information',
+          'Thông tin người bán',
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -96,7 +96,7 @@ class VendorStoreDetailScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       Text(
-                                        'Total Order',
+                                        'Tổng số đơn hàng',
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -146,7 +146,7 @@ class VendorStoreDetailScreen extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'Total Products: ${snapshot.data!.docs.length}',
+                  'Số sản phẩm: ${snapshot.data!.docs.length}',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

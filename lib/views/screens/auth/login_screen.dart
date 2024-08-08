@@ -5,6 +5,8 @@ import 'package:uber_shop_app/views/screens/auth/forgot_password_screen.dart';
 import 'package:uber_shop_app/views/screens/auth/register_screen.dart';
 import 'package:uber_shop_app/views/screens/map_screen.dart';
 
+import 'main_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -39,16 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
 
-        Get.to(MapScreen());
+        // Get.to(MapScreen());
+        Get.offAll(MainScreen());
         Get.snackbar(
-          'Login Success',
-          'You Are Now Logged In',
+          'Đăng nhập thành công',
+          'Bạn đã đăng nhập',
           backgroundColor: Colors.pink,
           colorText: Colors.white,
         );
       } else {
         Get.snackbar(
-          'Error Occurred',
+          'Xảy ra lỗi',
           res.toString(),
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -79,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 15,),
                 Text(
-                  'Login Account',
+                  'Đăng Nhập',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -99,14 +102,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please Email Address Must Not Be Empty';
+                            return 'Email không được để trống';
                           } else {
                             return null;
                           }
                         },
                         decoration: InputDecoration(
-                          labelText: 'Email Address',
-                          hintText: 'Enter Email Address',
+                          labelText: 'Email',
+                          hintText: 'Nhập vào email của bạn',
                           prefixIcon: Icon(
                             Icons.email,
                             color: Colors.pink,
@@ -123,14 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: _obscurePassword,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please Password Must Not Be Empty';
+                            return 'Mật khẩu không được để trống';
                           } else {
                             return null;
                           }
                         },
                         decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter Password',
+                          labelText: 'Mật khẩu',
+                          hintText: 'Nhập mật khẩu',
                           prefixIcon: Icon(
                             Icons.lock,
                             color: Colors.pink,
@@ -168,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.white,
                             )
                                 : Text(
-                              'Login',
+                              'Đăng nhập',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -195,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                             child: Text(
-                              'Forgot Password?',
+                              'Quên mật khẩu?',
                             ),
                           ),
                           TextButton(
@@ -210,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                             child: Text(
-                              'Need An Account?',
+                              'Chưa có tài khoản?',
                             ),
                           ),
                         ],

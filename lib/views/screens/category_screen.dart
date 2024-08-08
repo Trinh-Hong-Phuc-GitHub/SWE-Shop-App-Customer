@@ -20,7 +20,7 @@ class CategoryScreen extends StatelessWidget {
               width: 5,
             ),
             Text(
-              'Categories',
+              'Danh Mục',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

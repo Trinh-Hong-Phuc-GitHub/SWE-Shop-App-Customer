@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10,
           ),
           ReuseTextWidget(
-            title: "Top's Product",
+            title: "SẢN PHẨM ÁO",
           ),
           SizedBox(
             height: 10,
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TopProductsWidget(),
           SizedBox(height: 10,),
           ReuseTextWidget(
-            title: "Accessories's Product",
+            title: "PHỤ KIỆN THỜI TRANG",
           ),
           AccessoriesProductsWidget(),
         ],

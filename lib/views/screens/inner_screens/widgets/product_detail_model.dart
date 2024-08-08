@@ -82,7 +82,7 @@ class ProductDetailModel extends ConsumerWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          '\$${productData['productPrice'].toStringAsFixed(2)}',
+                          '${productData['productPrice'].toStringAsFixed(0)} đ',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

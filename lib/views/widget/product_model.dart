@@ -91,10 +91,8 @@ class _ProductModelState extends ConsumerState<ProductModel> {
                           height: 5,
                         ),
                         Text(
-                          "\$" +
-                              " " +
-                              widget.productData['productPrice']
-                                  .toStringAsFixed(2),
+                          widget.productData['productPrice']
+                                  .toStringAsFixed(0) + ' đ',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

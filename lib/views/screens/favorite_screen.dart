@@ -27,9 +27,9 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                 width: 5,
               ),
               Text(
-                'Wishlist',
+                'Yêu Thích',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 4,
                 ),
@@ -86,7 +86,7 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      "\$" + wishData.price.toStringAsFixed(2),
+                                      wishData.price.toStringAsFixed(0) + ' đ',
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Your Wishlist Is Empty',
+                      'Danh Sách Đang Trống',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -126,7 +126,7 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                       ),
                     ),
                     Text(
-                      "You Haven't Added Any Item To Your WishList\n You Can Add From The Home Screen",
+                      "Bạn chưa thêm bất kỳ sản phẩm nào vào danh sách \n Bạn có thể thêm từ màn hình chính",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

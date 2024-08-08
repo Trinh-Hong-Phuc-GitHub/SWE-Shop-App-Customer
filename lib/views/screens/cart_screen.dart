@@ -30,7 +30,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               width: 5,
             ),
             Text(
-              'Cart',
+              'Giỏ Hàng',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -97,7 +97,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     ),
                                   ),
                                   Text(
-                                    cartItem.price.toStringAsFixed(2),
+                                    cartItem.price.toStringAsFixed(0) + ' đ',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -171,7 +171,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Your Cart Is Empty',
+                    'Giỏ hàng đang trống',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                   ),
                   Text(
-                    "You Haven't Added Any Item To Your Cart\n You Can Add From The Home Screen",
+                    "Bạn chưa thêm bất kỳ mặt hàng nào vào giỏ hàng\n Bạn có thể thêm từ trang chi tiết sản phẩm",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -197,7 +197,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Price' + " " + "\$" + totalAmount.toStringAsFixed(2),
+                'Tổng Tiền' + " " + totalAmount.toStringAsFixed(0) + ' đ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -213,7 +213,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ));
                 },
                 child: Text(
-                  'CHECKOUT',
+                  'ĐẶT HÀNG',
                 ),
               ),
             ],

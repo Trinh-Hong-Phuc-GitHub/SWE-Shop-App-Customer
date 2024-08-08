@@ -28,7 +28,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Edit $title'),
+          title: Text('Thay Đổi $title'),
           content: TextField(
             controller: controller,
             decoration: InputDecoration(
@@ -40,14 +40,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
                 onSave();
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: Text('Lưu'),
             ),
           ],
         );
@@ -70,7 +70,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout'),
+        title: Text('Đặt Hàng'),
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: _firestore.collection('buyers').doc(_auth.currentUser!.uid).get(),
@@ -98,18 +98,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Buyer Information',
+                        'Thông Tin Người Mua',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       ListTile(
-                        title: Text('Full Name: $_fullName'),
+                        title: Text('Họ Và Tên: $_fullName'),
                         trailing: IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
-                            _editDialog(context, 'Full Name', _fullNameController, () {
+                            _editDialog(context, 'Họ Và Tên', _fullNameController, () {
                               setState(() {
                                 _fullName = _fullNameController.text;
                               });
@@ -131,11 +131,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                       ),
                       ListTile(
-                        title: Text('Address: $_address'),
+                        title: Text('Địa Chỉ: $_address'),
                         trailing: IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
-                            _editDialog(context, 'Address', _addressController, () {
+                            _editDialog(context, 'Địa Chỉ', _addressController, () {
                               setState(() {
                                 _address = _addressController.text;
                               });
@@ -144,11 +144,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                       ),
                       ListTile(
-                        title: Text('Phone Number: $_phoneNumber'),
+                        title: Text('Số Điện Thoại: $_phoneNumber'),
                         trailing: IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
-                            _editDialog(context, 'Phone Number', _phoneNumberController, () {
+                            _editDialog(context, 'Số Điện Thoại', _phoneNumberController, () {
                               setState(() {
                                 _phoneNumber = _phoneNumberController.text;
                               });
@@ -165,7 +165,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Order Information',
+                        'Thông Tin Đơn Hàng',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -218,7 +218,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                               ),
                                             ),
                                             Text(
-                                              cartItem.price.toStringAsFixed(2),
+                                              cartItem.price.toStringAsFixed(0),
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
@@ -250,68 +250,82 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             setState(() {
               _isLoading = true;
             });
-            DocumentSnapshot userDoc = await _firestore
+            final userDoc = await _firestore
                 .collection('buyers')
                 .doc(_auth.currentUser!.uid)
                 .get();
-            _cartProvider.getCartItems.forEach(
-                  (key, item) async {
-                final orderId = Uuid().v4();
-                await _firestore.collection('orders').doc(orderId).set({
-                  'orderId': orderId,
-                  'productId': item.productId,
-                  'productName': item.productName,
-                  'quantity': item.quantity,
-                  'price': item.quantity * item.price,
-                  'fullName': _fullName,
-                  'email': _email,
-                  'profileImage': userDoc['profileImage'],
-                  'address': _address,
-                  'phoneNumber': _phoneNumber,
-                  'buyerId': _auth.currentUser!.uid,
-                  'vendorId': item.vendorId,
-                  'productSize': item.productSize,
-                  'productImage': item.imageUrl,
-                  'vendorQuantity': item.productQuantity,
-                  'accepted': false,
-                  'orderStatus': 'Packing',
-                  'orderDate': DateTime.now(),
-                }).whenComplete(() {
-                  // Order completed successfully, show dialog and clear cart
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Order Placed'),
-                        content: Text('Your order has been placed successfully.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => MainScreen()),
-                                    (route) => false,
-                              );
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+            final orders = <String, List<Map<String, dynamic>>>{};
+            final totalPriceByVendor = <String, double>{};
 
-                  // Clear cart
-                  _cartProvider.removeAllItem();
+            _cartProvider.getCartItems.forEach((key, item) {
+              if (!orders.containsKey(item.vendorId)) {
+                orders[item.vendorId] = [];
+                totalPriceByVendor[item.vendorId] = 0.0;
+              }
+              final itemTotalPrice = item.quantity * item.price;
+              totalPriceByVendor[item.vendorId] = (totalPriceByVendor[item.vendorId] ?? 0.0) + itemTotalPrice;
 
-                  setState(() {
-                    _isLoading = false;
-                  });
+              orders[item.vendorId]!.add({
+                'productId': item.productId,
+                'productName': item.productName,
+                'quantity': item.quantity,
+                'price': itemTotalPrice,
+                'productSize': item.productSize,
+                'productImage': item.imageUrl,
+              });
+            });
+
+            for (var vendorId in orders.keys) {
+              final orderId = Uuid().v4();
+              await _firestore.collection('orders').doc(orderId).set({
+                'orderId': orderId,
+                'totalPrice': totalPriceByVendor[vendorId] ?? 0.0,
+                'products': orders[vendorId],
+                'fullName': _fullName,
+                'email': _email,
+                'profileImage': userDoc['profileImage'],
+                'address': _address,
+                'phoneNumber': _phoneNumber,
+                'buyerId': _auth.currentUser!.uid,
+                'vendorId': vendorId,
+                'accepted': false,
+                'orderStatus': 'Đang Đóng Gói',
+                'orderDate': DateTime.now(),
+                // 'title': 'Chưa xác nhận',
+              }).whenComplete(() {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Đã Đặt Hàng'),
+                      content: Text('Đơn hàng của bạn đã được đặt thành công.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => MainScreen()),
+                                  (route) => false,
+                            );
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                _cartProvider.removeAllItem();
+
+                setState(() {
+                  _isLoading = false;
                 });
-              },
-            );
+              });
+            }
           },
           child: Container(
-            height: 50,
+            height
+                : 50,
             width: MediaQuery.of(context).size.width - 50,
             decoration: BoxDecoration(
               color: Colors.pink,
@@ -323,10 +337,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             )
                 : Center(
               child: Text(
-                'Place Order' +
+                'Đặt hàng' +
                     " " +
-                    "\$" +
-                    totalAmount.toStringAsFixed(2),
+                    totalAmount.toStringAsFixed(0) + " đ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,

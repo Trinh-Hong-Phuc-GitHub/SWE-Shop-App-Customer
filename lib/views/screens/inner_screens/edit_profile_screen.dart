@@ -51,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .get();
         return userDoc['fullName'];
       } catch (e) {
-        print('error feching user full name: $e');
+        print('lỗi khi lấy tên đầy đủ của người dùng: $e');
       }
     } else {
       return null;
@@ -83,7 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Profile Update Initiated Please Check Your Email To Confirm',
+              'Đã bắt đầu cập nhật hồ sơ Vui lòng kiểm tra email của bạn để xác nhận',
             ),
           ),
         );
@@ -92,7 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Failed To Update: $e',
+            'Không cập nhật được: $e',
           ),
         ),
       );
@@ -104,7 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Edit Profile',
+          'Thay Đổi Hồ Sơ',
         ),
       ),
       body: Center(
@@ -114,7 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Edit Your Profile',
+                'Thông tin mới',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  hintText: 'Enter Email',
+                  hintText: 'Nhập email',
                 ),
               ),
               SizedBox(
@@ -132,7 +132,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: _fullNameController,
                 decoration: InputDecoration(
-                  hintText: 'Enter Full Name',
+                  hintText: 'Nhập tên đầy đủ',
                 ),
               ),
               SizedBox(
@@ -151,7 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      'Update Profile',
+                      'Cập nhật hồ sơ',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,

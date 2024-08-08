@@ -25,6 +25,47 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   int _imageIndex = 0;
+  int fiveStars = 0;
+  int fourStars = 0;
+  int threeStars = 0;
+  int twoStars = 0;
+  int oneStar = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRatingCounts();
+  }
+
+  Future<void> _fetchRatingCounts() async {
+    final productId = widget.productData['productId'];
+    final reviewsSnapshot = await FirebaseFirestore.instance
+        .collection('productReviews')
+        .where('productId', isEqualTo: productId)
+        .get();
+
+    for (var review in reviewsSnapshot.docs) {
+      final rating = review['rating'];
+      switch (rating) {
+        case 5:
+          fiveStars++;
+          break;
+        case 4:
+          fourStars++;
+          break;
+        case 3:
+          threeStars++;
+          break;
+        case 2:
+          twoStars++;
+          break;
+        case 1:
+          oneStar++;
+          break;
+      }
+    }
+    setState(() {});
+  }
 
   Future<void> callVendor(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -132,8 +173,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     height: 20,
                   ),
                   Text(
-                    '\$' +
-                        widget.productData['productPrice'].toStringAsFixed(2),
+                    widget.productData['productPrice'].toStringAsFixed(0) + ' đ',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.pink,
@@ -161,7 +201,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           ),
                         ),
                         Text(
-                          "(${widget.productData['totalReviews']} Reviews)",
+                          "(${widget.productData['totalReviews']} Đánh giá)",
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -179,13 +219,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Product Description',
+                          'Mô Tả Sản Phẩm',
                           style: TextStyle(
                             color: Colors.pink,
                           ),
                         ),
                         Text(
-                          'View More',
+                          'Xem thêm',
                           style: TextStyle(
                             color: Colors.pink,
                           ),
@@ -204,7 +244,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   ),
                   ExpansionTile(
                     title: Text(
-                      'VARIATION AVAILABLE',
+                      'Lựa Chọn Kích Cỡ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -272,7 +312,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'SEE PROFILE',
+                      'XEM THÔNG TIN',
                       style: TextStyle(
                         color: Colors.pink,
                         fontWeight: FontWeight.bold,
@@ -290,11 +330,11 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 counter: widget.productData['totalReviews'],
                 average: widget.productData['rating'],
                 showAverage: true,
-                counterFiveStars: 5,
-                counterFourStars: 4,
-                counterThreeStars: 2,
-                counterTwoStars: 1,
-                counterOneStars: 1,
+                counterFiveStars: fiveStars,
+                counterFourStars: fourStars,
+                counterThreeStars: threeStars,
+                counterTwoStars: twoStars,
+                counterOneStars: oneStar,
               ),
             ),
             SizedBox(
@@ -310,7 +350,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: Text("Loading Reviews"),
+                    child: Text("Loading"),
                   );
                 }
 

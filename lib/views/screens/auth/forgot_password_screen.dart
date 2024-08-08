@@ -27,15 +27,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       if (res == 'success') {
         Get.snackbar(
-          'Password Reset',
-          'A password reset link has been sent to $email',
+          'Đặt lại mật khẩu',
+          'Một liên kết đặt lại mật khẩu đã được gửi đến $email',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
         Navigator.pop(context);
       } else {
         Get.snackbar(
-          'Error Occurred',
+          'Xảy ra lỗi',
           res,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -48,7 +48,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forgot Password'),
+        title: Text('Quên mật khẩu'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -58,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Enter your email to reset password',
+                'Nhập email để đặt lại mật khẩu',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 20),
@@ -68,14 +68,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 },
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your email address';
+                    return 'Yêu cầu nhập email';
                   } else {
                     return null;
                   }
                 },
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  hintText: 'Enter your email address',
+                  hintText: 'Nhập email của bạn',
                   prefixIcon: Icon(
                     Icons.email,
                   ),
@@ -90,7 +90,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ? CircularProgressIndicator(
                         color: Colors.white,
                       )
-                    : Text('Send Reset Email'),
+                    : Text('Gửi email đặt lại'),
               ),
             ],
           ),

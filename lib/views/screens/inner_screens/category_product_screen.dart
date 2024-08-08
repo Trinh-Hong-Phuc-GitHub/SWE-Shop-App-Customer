@@ -41,15 +41,15 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
             },
             items: [
               DropdownMenuItem(
-                child: Text('Default'),
+                child: Text('Mặc định'),
                 value: 'default',
               ),
               DropdownMenuItem(
-                child: Text('Price: Low to High'),
+                child: Text('Giá thấp đến cao'),
                 value: 'priceLowToHigh',
               ),
               DropdownMenuItem(
-                child: Text('Price: High to Low'),
+                child: Text('Giá cao đến thấp'),
                 value: 'priceHighToLow',
               ),
             ],
@@ -72,7 +72,7 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
           if (snapshot.data!.docs.isEmpty) {
             return Center(
               child: Text(
-                'No Product Under\n This Category',
+                'Không Có Sản Phẩm',
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.blueGrey,
@@ -142,7 +142,7 @@ class _CategoryProductScreenState extends State<CategoryProductScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          '\$' + productData['productPrice'].toStringAsFixed(2),
+                          productData['productPrice'].toStringAsFixed(0) + ' đ',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

@@ -22,7 +22,7 @@ class _AccountScreenState extends State<AccountScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Profile',
+          'Hồ Sơ',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -90,7 +90,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               },
                             ));
                           },
-                          child: Text('Edit Profile'),
+                          child: Text('Sửa thông tin'),
                         ),
                       ),
                     ),
@@ -104,7 +104,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ListTile(
                       leading: Icon(Icons.map),
                       title: Text(
-                        "Address",
+                        "Địa chỉ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -118,22 +118,22 @@ class _AccountScreenState extends State<AccountScreen> {
                             builder: (BuildContext context) {
                               TextEditingController controller = TextEditingController(text: address);
                               return AlertDialog(
-                                title: Text("Edit Address"),
+                                title: Text("Thay đổi địa chỉ"),
                                 content: TextField(
                                   controller: controller,
                                   decoration: InputDecoration(
-                                    hintText: "Enter new address",
+                                    hintText: "Nhập địa chỉ mới",
                                   ),
                                 ),
                                 actions: [
                                   TextButton(
-                                    child: Text("Save"),
+                                    child: Text("Lưu"),
                                     onPressed: () {
                                       Navigator.of(context).pop(controller.text.trim());
                                     },
                                   ),
                                   TextButton(
-                                    child: Text("Cancel"),
+                                    child: Text("Trở về"),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -156,7 +156,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ListTile(
                       leading: Icon(Icons.phone),
                       title: Text(
-                        'Phone',
+                        'Số điện thoại',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -170,23 +170,23 @@ class _AccountScreenState extends State<AccountScreen> {
                             builder: (BuildContext context) {
                               TextEditingController controller = TextEditingController(text: phoneNumber);
                               return AlertDialog(
-                                title: Text("Edit Phone Number"),
+                                title: Text("Thay đổi số điện thoại"),
                                 content: TextField(
                                   controller: controller,
                                   keyboardType: TextInputType.phone,
                                   decoration: InputDecoration(
-                                    hintText: "Enter new phone number",
+                                    hintText: "Nhập số điện thoại mới",
                                   ),
                                 ),
                                 actions: [
                                   TextButton(
-                                    child: Text("Save"),
+                                    child: Text("Lưu"),
                                     onPressed: () {
                                       Navigator.of(context).pop(controller.text.trim());
                                     },
                                   ),
                                   TextButton(
-                                    child: Text("Cancel"),
+                                    child: Text("Trở về"),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -206,22 +206,22 @@ class _AccountScreenState extends State<AccountScreen> {
                         },
                       ),
                     ),
-                    ListTile(
-                      leading: Icon(Icons.shopping_cart),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return CartScreen();
-                          },
-                        ));
-                      },
-                      title: Text(
-                        'Cart',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    // ListTile(
+                    //   leading: Icon(Icons.shopping_cart),
+                    //   onTap: () {
+                    //     Navigator.push(context, MaterialPageRoute(
+                    //       builder: (context) {
+                    //         return CartScreen();
+                    //       },
+                    //     ));
+                    //   },
+                    //   title: Text(
+                    //     'Cart',
+                    //     style: TextStyle(
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                     ListTile(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
@@ -232,7 +232,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                       leading: Icon(CupertinoIcons.bag),
                       title: Text(
-                        'Orders',
+                        'Đơn hàng',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -248,7 +248,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                       leading: Icon(Icons.logout),
                       title: Text(
-                        'Log out',
+                        'Đăng xuất',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.pink,

@@ -16,7 +16,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Payment Options',
+          'Lựa Chọn Thanh Toán',
           style: TextStyle(
             fontWeight: FontWeight.w400,
             letterSpacing: 4,
@@ -28,7 +28,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           children: [
             Text(
-              'Select Payment Method',
+              'Chọn Phương Thức Thanh Toán',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w300,
@@ -39,7 +39,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Pay on Delivery',
+                  'Thanh toán khi nhận hàng',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w300,

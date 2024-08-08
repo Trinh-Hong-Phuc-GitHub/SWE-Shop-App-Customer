@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
           decoration: InputDecoration(
-            labelText: 'Search For Products',
+            labelText: 'Tìm kiếm sản phẩm',
             labelStyle: TextStyle(
               color: Colors.white,
               letterSpacing: 1.5,
@@ -84,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
             if (searchedValue.isEmpty) {
               return Center(
                 child: Text(
-                  'You can search for products',
+                  'Bạn có thể tìm kiếm sản phẩm',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -157,7 +157,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '\$${e['productPrice'].toStringAsFixed(2)}',
+                                      '${e['productPrice'].toStringAsFixed(0)}' +' đ',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,

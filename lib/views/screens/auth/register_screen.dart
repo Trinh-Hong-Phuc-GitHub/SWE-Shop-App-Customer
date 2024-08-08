@@ -62,8 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
           Get.to(LoginScreen());
           Get.snackbar(
-            'Success',
-            'Account has been created for you',
+            'Thành công',
+            'Tài khoản đã được tạo cho bạn',
             backgroundColor: Colors.pink,
             colorText: Colors.white,
             margin: EdgeInsets.all(15),
@@ -74,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         } else {
           Get.snackbar(
-            'Error Occured',
+            'Xảy ra lỗi',
             res.toString(),
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -88,8 +88,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       } else {
         Get.snackbar(
-          'Form',
-          'Form Field is not valid',
+          'Cảnh báo',
+          'Trường biểu mẫu không hợp lệ',
           backgroundColor: Colors.red,
           colorText: Colors.white,
           margin: EdgeInsets.all(15),
@@ -101,8 +101,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } else {
       Get.snackbar(
-        'No Image',
-        'Please Capture or Select Image',
+        'Chưa có ảnh',
+        'Vui lòng chụp hoặc chọn hình ảnh',
         backgroundColor: Colors.red,
         colorText: Colors.white,
         margin: EdgeInsets.all(15),
@@ -126,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Register Account',
+                  'Đăng ký',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -171,14 +171,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please Email Address Must Not Be Empty';
+                      return 'Vui lòng không để trống địa chỉ email';
                     } else {
                       return null;
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'Email Adress',
-                    hintText: 'Enter Email Address',
+                    labelText: 'Email',
+                    hintText: 'Nhập địa chỉ email',
                     prefixIcon: Icon(
                       Icons.email,
                       color: Colors.pink,
@@ -194,14 +194,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please Full Name Must Not Be Empty';
+                      return 'Vui lòng không để trống tên đầy đủ';
                     } else {
                       return null;
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter FullName',
+                    labelText: 'Tên đầy đủ',
+                    hintText: 'Nhập họ và tên',
                     prefixIcon: Icon(
                       Icons.person,
                       color: Colors.pink,
@@ -218,14 +218,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: _obscurePassword,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please Password Must Not Be Empty';
+                      return 'Vui lòng nhập mật khẩu không được để trống';
                     } else {
                       return null;
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter Password',
+                    labelText: 'Mật khẩu',
+                    hintText: 'Nhập mật khẩu',
                     prefixIcon: Icon(
                       Icons.lock,
                       color: Colors.pink,
@@ -263,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: Colors.white,
                             )
                           : Text(
-                              'Register',
+                              'Đăng ký',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -289,7 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   },
                   child: Text(
-                    'Already Have An Account?',
+                    'Đã có tài khoản?',
                   ),
                 ),
               ],

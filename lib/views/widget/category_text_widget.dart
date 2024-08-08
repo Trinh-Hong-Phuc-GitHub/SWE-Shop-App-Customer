@@ -23,7 +23,7 @@ class _CategoryTextWidgetState extends State<CategoryTextWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Categories',
+            'DANH MỤC',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               letterSpacing: 2,
